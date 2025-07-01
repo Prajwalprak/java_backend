@@ -1,10 +1,13 @@
 package com.booking.cabbooking.controller;
 
+import com.booking.cabbooking.domain.model.Company;
 import com.booking.cabbooking.domain.model.Employee;
+import com.booking.cabbooking.domain.model.EmployeeResponseDTO;
 import com.booking.cabbooking.domain.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -41,4 +44,14 @@ public class EmployeeController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/filter/address={address}")
+    public List<EmployeeResponseDTO> getFilteredEmployees(
+            @PathVariable String address,
+            @RequestParam("pickup") String pickup) {
+
+        LocalTime pickupTime = LocalTime.parse(pickup);
+        return employeeService.getEmployeesByAddressAndPickup(address, pickupTime);
+    }
+
 }
